@@ -1,0 +1,112 @@
+---
+description: Conventional Commits — subject + body obligatorio, sin Co-authored-by de Cursor/IA
+alwaysApply: true
+---
+
+# Conventional Commits
+
+Al crear un commit (solo cuando el usuario lo pida), usa exactamente este formato:
+
+```
+<type>(<scope>): <subject>
+
+<body>
+```
+
+- `type`: uno de los tipos permitidos abajo
+- `scope`: área afectada en minúsculas (módulo, paquete o dominio); obligatorio
+- `subject`: imperativo en inglés, minúsculas, sin punto final, ≤72 caracteres en la primera línea
+- `body`: **obligatorio** — descripción del commit tras una línea en blanco
+
+### Body (descripción) — obligatorio
+
+- Explica el **porqué** y el impacto; no repitas el subject ni listes archivos
+- Inglés, frases claras; 1–4 líneas cortas (wrap ~72–100 chars)
+- Menciona contexto relevante: bug evitado, comportamiento nuevo, decisión de diseño
+- No uses bullets vacíos ni relleno genérico (“update stuff”, “changes”)
+- Breaking change: footer `BREAKING CHANGE: <detalle>` o `!` tras el type (`feat(api)!: ...`)
+
+## Tipos permitidos
+
+| type       | Uso                                              |
+| ---------- | ------------------------------------------------ |
+| `feat`     | Nueva funcionalidad                              |
+| `fix`      | Corrección de bugs                               |
+| `docs`     | Documentación                                    |
+| `style`    | Formato/espacios/prettier (sin cambio de lógica) |
+| `refactor` | Mejora interna sin cambiar comportamiento        |
+| `perf`     | Optimización de rendimiento                      |
+| `test`     | Agregar o actualizar pruebas                     |
+| `build`    | Dependencias o build system                      |
+| `chore`    | Tareas varias que no afectan producción          |
+| `ci`       | Pipelines, GitHub Actions, Turborepo tasks       |
+
+## Ejemplos
+
+```
+feat(auth): implement jwt refresh token
+
+Keep sessions alive without forcing a full re-login when the
+access token expires during active use.
+
+fix(payments): rounding issue in total price
+
+Prevent off-by-one cent totals when summing line items with
+mixed tax rates.
+
+docs(readme): add installation steps
+
+Clarify local setup so new contributors can run the app
+without asking for env details.
+
+refactor(core): simplify error handler
+
+Centralize mapping of domain errors to HTTP responses to
+avoid duplicated status logic across controllers.
+```
+
+## Reglas
+
+- Un commit = un propósito; no mezclar `feat` + `fix` en el mismo mensaje
+- No uses tipos fuera de la tabla (`update`, `wip`, `changes`, etc.)
+- **Siempre** incluye body (descripción) tras la línea en blanco; un commit solo con subject no es válido
+- Breaking change: footer `BREAKING CHANGE: <detalle>` o `!` tras el type (`feat(api)!: ...`)
+
+## Sin atribución de Cursor / IA (obligatorio)
+
+El autor del commit es **solo el usuario**. Está **prohibido** cualquier trailer o texto de atribución de agente/IA.
+
+### Prohibido
+
+- `Co-authored-by: Cursor <…>`
+- `Co-authored-by:` de cualquier agente/IA
+- `Made-with: Cursor` / `Made with Cursor` / footers equivalentes
+- Pasar `--trailer`, `--author` de Cursor, o cualquier flag que añada atribución
+
+### Cómo crear el commit
+
+1. Mensaje **solo** con subject + body obligatorio (Conventional Commits). Nada más.
+2. Pasa el mensaje con HEREDOC/`-m` subject + `-m` body (o un solo `-F` con subject, blank line y body). **No** añadas trailers de atribución.
+3. **No** uses un único `-m` de una sola línea: el body debe quedar en el commit.
+4. Tras cada `git commit`, verifica de inmediato:
+
+   ```
+   git log -1 --format=full
+   ```
+
+5. Si el mensaje contiene `Co-authored-by`, `Made-with`, `Made with Cursor` o similar **y el commit aún no está pusheado**, **quítalo antes de terminar** reescribiendo HEAD con `git commit-tree` + `git update-ref` (mismo tree/parent/author/date, mensaje limpio). No dejes el trailer en el historial local.
+6. No uses `git commit --amend` si Cursor vuelve a inyectar el trailer al amend; usa el flujo `commit-tree` de arriba.
+7. Si la plataforma inyecta el trailer pese a todo, corrígelo igual (paso 5) y avisa al usuario que desactive Attribution en Cursor:
+
+   - Cursor Settings → **Git & PRs** (o **Agents**) → **Attribution** → OFF (Commit y PR)
+   - CLI: `~/.cursor/cli-config.json` → `attribution.attributeCommitsToAgent: false` y `attribution.attributePRsToAgent: false`
+
+### Protección automática (ya instalada)
+
+No dependas solo del toggle de Cursor (a veces se ignora). En este entorno hay:
+
+1. **CLI** — `~/.cursor/cli-config.json` con attribution en `false`
+2. **Hooks de Cursor** (usuario + proyecto) — quitan trailers tras `git commit` y filtran `--trailer` en Shell
+3. **`commit-msg`** en `backend-sisco-pil` y `front-sisco-pil_` — elimina esas líneas antes de crear el commit
+
+Tras un commit del agente, sigue verificando con `git log -1 --format=full`.
