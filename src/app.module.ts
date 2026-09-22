@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { createObserveModule } from '@nestjs/observe';
-
+import { ReservasModule } from './reservas/infrastructure/nestjs/reservas.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -13,6 +13,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       appSecret: 'YOUR_APP_SECRET',
       serviceId: 'reserva-sala_nest-js_hexagonal',
     }),
+    ReservasModule,
   ],
   controllers: [],
   providers: [],
