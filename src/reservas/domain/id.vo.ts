@@ -11,4 +11,8 @@ export class Id {
     }
     return new Id(value);
   }
+
+  getValue(): string {
+    return this.value;
+  }
 }

@@ -52,9 +52,31 @@ export class Reserva {
     const idVO = Id.crear(id);
     const salaIdVO = SalaId.crear(salaId);
     const solictanteVO = Solicitante.crear(solictante);
-
     const rangoHorario = RangoHorario.crear(fechaInicio, fechaFin);
 
     return new Reserva(idVO, salaIdVO, solictanteVO, rangoHorario);
+  }
+
+  obtenerSalaId(): SalaId {
+    return this.salaId;
+  }
+
+  esDeLaMismaSala(otraReserva: Reserva): boolean {
+    return this.salaId.getValue() === otraReserva.obtenerSalaId().getValue();
+  }
+
+  obtenerSalaIdPrimitivo(): string {
+    return this.salaId.getValue();
+  }
+
+  obtenerIdPrimitivo(): string {
+    return this.id.getValue();
+  }
+
+  chocaCon(otraReserva: Reserva): boolean {
+    if (this.obtenerIdPrimitivo() === otraReserva.obtenerIdPrimitivo()) {
+      return false;
+    }
+    return true;
   }
 }

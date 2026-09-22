@@ -10,3 +10,5 @@ export interface ReservaRepository {
   //   buscarPorSolicitante(solicitante: Solicitante): Promise<Reserva[]>;
   //   buscarPorRangoHorario(rangoHorario: RangoHorario): Promise<Reserva[]>;
 }
+
+export const ReservaRepositoryToken = Symbol('ReservaRepositoryToken');

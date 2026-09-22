@@ -12,4 +12,7 @@ export class SalaId {
     }
     return new SalaId(value);
   }
+  getValue(): string {
+    return this.value;
+  }
 }
