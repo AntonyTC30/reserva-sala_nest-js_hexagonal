@@ -1,60 +1,60 @@
 import { DomainError } from '../../shared/domain/domain.error.js';
-import { Id } from './id.vo.js';
-import { RangoHorario } from './rango-horario.vo.js';
-import { SalaId } from './sala-id.vo.js';
-import { Solicitante } from './solicitante.vo.js';
+import { Id } from './vo/id.vo.js';
+import { RangoHorario } from './vo/rango-horario.vo.js';
+import { SalaId } from './vo/sala-id.vo.js';
+import { Solicitante } from './vo/solicitante.vo.js';
 
 export class Reserva {
   private id: Id;
   private salaId: SalaId;
-  private solictante: Solicitante;
+  private solicitante: Solicitante;
   private rangoHorario: RangoHorario;
 
   private constructor(
     id: Id,
     salaId: SalaId,
-    solictante: Solicitante,
+    solicitante: Solicitante,
     rangoHorario: RangoHorario,
   ) {
     this.id = id;
     this.salaId = salaId;
-    this.solictante = solictante;
+    this.solicitante = solicitante;
     this.rangoHorario = rangoHorario;
   }
 
   static crear(params: {
     id: string;
     salaId: string;
-    solictante: string;
+    solicitante: string;
     fechaInicio: Date;
     fechaFin: Date;
   }): Reserva {
-    const { id, salaId, solictante, fechaInicio, fechaFin } = params;
+    const { id, salaId, solicitante, fechaInicio, fechaFin } = params;
 
     const idVO = Id.crear(id);
     const salaIdVO = SalaId.crear(salaId);
-    const solictanteVO = Solicitante.crear(solictante);
+    const solicitanteVO = Solicitante.crear(solicitante);
 
     const rangoHorario = RangoHorario.crear(fechaInicio, fechaFin);
 
-    return new Reserva(idVO, salaIdVO, solictanteVO, rangoHorario);
+    return new Reserva(idVO, salaIdVO, solicitanteVO, rangoHorario);
   }
 
   static reconstituir(params: {
     id: string;
     salaId: string;
-    solictante: string;
+    solicitante: string;
     fechaInicio: Date;
     fechaFin: Date;
   }): Reserva {
-    const { id, salaId, solictante, fechaInicio, fechaFin } = params;
+    const { id, salaId, solicitante, fechaInicio, fechaFin } = params;
 
     const idVO = Id.crear(id);
     const salaIdVO = SalaId.crear(salaId);
-    const solictanteVO = Solicitante.crear(solictante);
+    const solicitanteVO = Solicitante.crear(solicitante);
     const rangoHorario = RangoHorario.crear(fechaInicio, fechaFin);
 
-    return new Reserva(idVO, salaIdVO, solictanteVO, rangoHorario);
+    return new Reserva(idVO, salaIdVO, solicitanteVO, rangoHorario);
   }
 
   obtenerSalaId(): SalaId {
@@ -71,6 +71,14 @@ export class Reserva {
 
   obtenerIdPrimitivo(): string {
     return this.id.getValue();
+  }
+
+  obtenerSolicitantePrimitivo(): string {
+    return this.solicitante.getValue();
+  }
+
+  obtenerRangoHorario(): RangoHorario {
+    return this.rangoHorario;
   }
 
   chocaCon(otraReserva: Reserva): boolean {

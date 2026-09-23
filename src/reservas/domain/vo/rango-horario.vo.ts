@@ -1,4 +1,4 @@
-import { DomainError } from '../../shared/domain/domain.error.js';
+import { DomainError } from '../../../shared/domain/domain.error.js';
 
 export const DURACION_MAXIMA_RESERVA = 240;
 export const DURACION_MINIMA_RESERVA = 30;

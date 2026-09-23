@@ -1,4 +1,4 @@
-import { DomainError } from '../../shared/domain/domain.error.js';
+import { DomainError } from '../../../shared/domain/domain.error.js';
 
 export class SalaId {
   private value: string;

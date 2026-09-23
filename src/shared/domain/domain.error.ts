@@ -4,5 +4,3 @@ export class DomainError extends Error {
     this.name = new.target.name;
   }
 }
-
-

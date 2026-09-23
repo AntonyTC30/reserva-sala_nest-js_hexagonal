@@ -1,4 +1,4 @@
-import { DomainError } from "../../shared/domain/domain.error.js";
+import { DomainError } from '../../../shared/domain/domain.error.js';
 
 export class Solicitante {
   private value: string;
@@ -10,5 +10,9 @@ export class Solicitante {
       throw new DomainError('El solicitante es obligatorio');
     }
     return new Solicitante(value);
+  }
+
+  getValue(): string {
+    return this.value;
   }
 }

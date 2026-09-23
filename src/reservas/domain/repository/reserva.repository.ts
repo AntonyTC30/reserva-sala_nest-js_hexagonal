@@ -1,6 +1,6 @@
-import { Id } from './id.vo.js';
-import { Reserva } from './reserva.js';
-import { SalaId } from './sala-id.vo.js';
+import { Id } from '../vo/id.vo.js';
+import { Reserva } from '../reserva.js';
+import { SalaId } from '../vo/sala-id.vo.js';
 
 export interface ReservaRepository {
   buscarPorSala(salaId: SalaId): Promise<Reserva[]>;

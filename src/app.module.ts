@@ -1,17 +1,35 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { createObserveModule } from '@nestjs/observe';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReservasModule } from './reservas/infrastructure/nestjs/reservas.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
 @Module({
   imports: [
-    // Distributed tracing, auto-correlated logs, request/job metrics, error
-    // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
-    ObserveModule.forRoot({
-      appKey: 'YOUR_APP_KEY',
-      appSecret: 'YOUR_APP_SECRET',
-      serviceId: 'reserva-sala_nest-js_hexagonal',
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        const database = config.get<string>('RESERVAS_SERVICE_SQLITE_DATABASE');
+
+        if (!database) {
+          throw new Error(
+            'Falta RESERVAS_SERVICE_SQLITE_DATABASE. Copia .env.example a .env',
+          );
+        }
+        return {
+          type: 'better-sqlite3',
+          database,
+          autoLoadEntities: true,
+          synchronize:
+            config.get<string>('RESERVAS_SERVICE_SQLITE_SYNCHRONIZE') ===
+            'true',
+          logging:
+            config.get<string>('RESERVAS_SERVICE_SQLITE_LOGGING') === 'true',
+        };
+      },
     }),
     ReservasModule,
   ],
